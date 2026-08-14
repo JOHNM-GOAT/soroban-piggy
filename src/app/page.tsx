@@ -892,10 +892,11 @@ export default function Home() {
                     type="number"
                     step="0.1"
                     min="0.1"
+                    max="1000"
                     className="input-field"
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    placeholder="1.0"
+                    placeholder="1000 max deposit"
                   />
                   <button
                     className="btn-primary"
