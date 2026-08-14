@@ -13,8 +13,6 @@ import {
   ShieldCheck,
   ShieldAlert,
   AlertTriangle,
-  UserCheck,
-  X,
   Trophy,
   Flame,
   Zap,
@@ -36,6 +34,7 @@ import {
   LogOut,
   ArrowRight,
   Shield,
+  X,
 } from "lucide-react";
 import { STELLAR_CONFIG } from "../config/stellar";
 import {
@@ -58,9 +57,6 @@ import {
   QuestTask,
   GAME_RESET_INTERVAL_MS,
 } from "../lib/gamification";
-
-// Alice Testnet Account
-const ALICE_ADDRESS = "GAPWFBDWYICFBIUQRYLECMFWHZN4YLVXUKVNKCAU4X2TMZMBV4RKMESZ";
 
 const LOCK_DURATION = 60;   // 1 minute (60 seconds) lock phase
 const UNLOCK_DURATION = 20; // 20 seconds unlock window
@@ -189,7 +185,7 @@ export default function Home() {
       if (!installed) {
         setStatusMessage({
           type: "warning",
-          text: "Freighter browser extension not detected. You can install Freighter or use Alice Test Account to test.",
+          text: "Freighter browser extension not detected. Please install Freighter to connect.",
           installLink: true,
         });
       }
@@ -436,15 +432,6 @@ export default function Home() {
         installLink: !freighterInstalled,
       });
     }
-  };
-
-  const handleUseAliceAccount = () => {
-    setWalletAddress(ALICE_ADDRESS);
-    addXp(50, "Alice Mode");
-    setStatusMessage({
-      type: "success",
-      text: "Connected with Alice Test Account (GAPW...MESZ)",
-    });
   };
 
   const handleLogout = () => {
