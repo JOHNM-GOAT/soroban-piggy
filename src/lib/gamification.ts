@@ -1,3 +1,12 @@
+/**
+ * Game Task Reset Cooldown Interval
+ * Resets mini-games (Stellar Stroop Catcher & Vault Code Breaker) every 5 minutes so users can replay them.
+ * 
+ * Note: To switch to a 24-hour daily reset in production, change this value to:
+ * export const GAME_RESET_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 Hours (86,400,000 ms)
+ */
+export const GAME_RESET_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes (300,000 ms) -- Production: 24 * 60 * 60 * 1000 (24h)
+
 export interface LevelInfo {
   level: number;
   title: string;
@@ -13,6 +22,25 @@ export interface AchievementBadge {
   description: string;
   emoji: string;
   unlocked: boolean;
+}
+
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
+
+export interface QuestTask {
+  id: string;
+  title: string;
+  description: string;
+  rewardXp: number;
+  completed: boolean;
+  category: "daily" | "quiz" | "vault" | "social" | "game";
+  emoji: string;
+  actionText: string;
+  quizQuestion?: QuizQuestion;
+  lastCompletedAt?: number;
 }
 
 export const LEVEL_TIERS: LevelInfo[] = [
@@ -61,6 +89,74 @@ export const INITIAL_BADGES: AchievementBadge[] = [
   },
 ];
 
+export const INITIAL_QUESTS: QuestTask[] = [
+  {
+    id: "daily_checkin",
+    title: "Daily Saver Check-In",
+    description: "Claim your daily login streak bonus.",
+    rewardXp: 50,
+    completed: false,
+    category: "daily",
+    emoji: "☀️",
+    actionText: "Claim +50 XP",
+  },
+  {
+    id: "soroban_quiz",
+    title: "Soroban Smart Quiz",
+    description: "Answer a quick Web3 Soroban contract question.",
+    rewardXp: 100,
+    completed: false,
+    category: "quiz",
+    emoji: "🧠",
+    actionText: "Take Quiz",
+    quizQuestion: {
+      question: "Which smart contract platform powers native smart contracts on the Stellar network?",
+      options: ["EVM", "Soroban", "CosmWasm", "Solana Anchor"],
+      correctAnswer: 1, // Soroban
+    },
+  },
+  {
+    id: "explore_contract",
+    title: "Inspect Contract Explorer",
+    description: "Inspect the Piggy Bank contract metadata on Stellar Explorer.",
+    rewardXp: 75,
+    completed: false,
+    category: "social",
+    emoji: "🔍",
+    actionText: "Inspect Contract",
+  },
+  {
+    id: "vault_deposit_quest",
+    title: "Vault Depositor",
+    description: "Deposit any XLM into the Timelock Savings Vault.",
+    rewardXp: 150,
+    completed: false,
+    category: "vault",
+    emoji: "💰",
+    actionText: "Deposit XLM",
+  },
+  {
+    id: "stroop_catcher_game",
+    title: "Stellar Stroop Catcher",
+    description: "Catch glowing Stroop coins in a 15-second speed arcade challenge.",
+    rewardXp: 100,
+    completed: false,
+    category: "game",
+    emoji: "🪙",
+    actionText: "Play Game",
+  },
+  {
+    id: "code_breaker_game",
+    title: "Vault Code Breaker",
+    description: "Memorize the security combination pattern to crack the vault.",
+    rewardXp: 150,
+    completed: false,
+    category: "game",
+    emoji: "🔐",
+    actionText: "Play Game",
+  },
+];
+
 /**
  * Calculate level info based on current XP
  */
@@ -76,7 +172,13 @@ export function getLevelInfo(xp: number): LevelInfo {
 /**
  * Save Gamification State to LocalStorage
  */
-export function saveGamificationState(data: { xp: number; streak: number; badges: string[] }) {
+export function saveGamificationState(data: {
+  xp: number;
+  streak: number;
+  badges: string[];
+  completedQuests?: string[];
+  questTimestamps?: Record<string, number>;
+}) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem("soroban_piggy_gamification", JSON.stringify(data));
@@ -88,17 +190,32 @@ export function saveGamificationState(data: { xp: number; streak: number; badges
 /**
  * Load Gamification State from LocalStorage
  */
-export function loadGamificationState(): { xp: number; streak: number; badges: string[] } {
+export function loadGamificationState(): {
+  xp: number;
+  streak: number;
+  badges: string[];
+  completedQuests: string[];
+  questTimestamps: Record<string, number>;
+} {
   if (typeof window === "undefined") {
-    return { xp: 0, streak: 0, badges: [] };
+    return { xp: 150, streak: 1, badges: [], completedQuests: [], questTimestamps: {} };
   }
   try {
     const raw = localStorage.getItem("soroban_piggy_gamification");
     if (raw) {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      return {
+        xp: parsed.xp ?? 150,
+        streak: parsed.streak ?? 1,
+        badges: parsed.badges ?? [],
+        completedQuests: parsed.completedQuests ?? [],
+        questTimestamps: parsed.questTimestamps ?? {},
+      };
     }
   } catch (e) {
     console.error("Failed to load gamification state:", e);
   }
-  return { xp: 150, streak: 1, badges: [] }; // Initial starter XP
+  return { xp: 150, streak: 1, badges: [], completedQuests: [], questTimestamps: {} };
 }
+
+
