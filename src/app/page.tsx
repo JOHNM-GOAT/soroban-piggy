@@ -386,8 +386,14 @@ export default function Home() {
     }
   };
 
-  // 60s Lock / 20s Unlock Cycle Ticker
+  // 60s Lock / 20s Unlock Cycle Ticker (Only runs when wallet is connected)
   useEffect(() => {
+    if (!walletAddress) {
+      setPhase("LOCKED");
+      setSecondsRemaining(LOCK_DURATION);
+      return;
+    }
+
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
         if (prev > 1) {
@@ -416,7 +422,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [phase, soundEnabled]);
+  }, [phase, walletAddress, soundEnabled]);
 
   const handleConnectWallet = async () => {
     setStatusMessage(null);
@@ -436,6 +442,8 @@ export default function Home() {
 
   const handleLogout = () => {
     setWalletAddress(null);
+    setPhase("LOCKED");
+    setSecondsRemaining(LOCK_DURATION);
     setStatusMessage({
       type: "warning",
       text: "Logged out. Connect your Freighter wallet to re-enter the vault.",
