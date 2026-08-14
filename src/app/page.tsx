@@ -500,6 +500,22 @@ export default function Home() {
       return;
     }
 
+    if (!isUnlocked) {
+      setStatusMessage({
+        type: "warning",
+        text: "🔒 Vault is currently locked! Please wait for the 20-second unlock window to withdraw.",
+      });
+      return;
+    }
+
+    if (vaultInfo && vaultInfo.balanceXlm <= 0) {
+      setStatusMessage({
+        type: "warning",
+        text: "⚠️ Vault balance is 0 XLM. Deposit XLM into the vault first before withdrawing!",
+      });
+      return;
+    }
+
     setTxProcessing(true);
     setStatusMessage(null);
 
@@ -513,16 +529,20 @@ export default function Home() {
 
       setStatusMessage({
         type: "success",
-        text: "🎉 Vault funds successfully withdrawn!",
+        text: "🎉 Vault funds successfully withdrawn on-chain!",
         hash: res.txHash,
       });
       setPhase("LOCKED");
       setSecondsRemaining(LOCK_DURATION);
       fetchVaultState();
     } else {
+      let errMsg = res.error || "Withdrawal failed. Check lock status or authorization.";
+      if (errMsg.includes("WasmVm") || errMsg.includes("UnreachableCodeReached") || errMsg.includes("HostError")) {
+        errMsg = "On-chain error: Vault lock condition not met or contract balance is 0 XLM.";
+      }
       setStatusMessage({
         type: "error",
-        text: res.error || "Withdrawal failed. Check lock status or authorization.",
+        text: errMsg,
       });
     }
   };
