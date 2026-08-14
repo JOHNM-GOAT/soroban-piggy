@@ -1157,7 +1157,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div style={{ padding: "2rem 0", textStyle: "center", color: "var(--text-muted)", fontSize: "0.85rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", flex: 1 }}>
+                <div style={{ padding: "2rem 0", textAlign: "center", color: "var(--text-muted)", fontSize: "0.85rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", flex: 1 }}>
                   <EyeOff size={16} />
                   <span>Contract metadata is hidden</span>
                 </div>
