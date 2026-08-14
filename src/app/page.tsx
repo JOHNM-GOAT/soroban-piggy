@@ -527,6 +527,9 @@ export default function Home() {
       fireConfetti();
       addXp(150, "Vault Withdrawal");
 
+      // Optimistically update UI balance to 0 XLM immediately
+      setVaultInfo((prev) => (prev ? { ...prev, balanceXlm: 0, balanceStroops: "0" } : null));
+
       setStatusMessage({
         type: "success",
         text: "🎉 Vault funds successfully withdrawn on-chain!",
@@ -534,7 +537,10 @@ export default function Home() {
       });
       setPhase("LOCKED");
       setSecondsRemaining(LOCK_DURATION);
-      fetchVaultState();
+      
+      setTimeout(() => {
+        fetchVaultState();
+      }, 2000);
     } else {
       let errMsg = res.error || "Withdrawal failed. Check lock status or authorization.";
       if (errMsg.includes("WasmVm") || errMsg.includes("UnreachableCodeReached") || errMsg.includes("HostError")) {

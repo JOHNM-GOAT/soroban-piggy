@@ -262,6 +262,13 @@ export async function withdrawXlm(
 
     const statusStr = (sendResp.status as string) || "";
     if (statusStr === "PENDING" || statusStr === "SUCCESS") {
+      let statusResp = await server.getTransaction(sendResp.hash);
+      let attempts = 0;
+      while ((statusResp.status as string) === "NOT_FOUND" && attempts < 10) {
+        await new Promise((r) => setTimeout(r, 1500));
+        statusResp = await server.getTransaction(sendResp.hash);
+        attempts++;
+      }
       return { success: true, txHash: sendResp.hash };
     } else {
       return { success: false, error: "Withdrawal submission failed." };
