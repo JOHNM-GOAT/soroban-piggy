@@ -707,9 +707,9 @@ export default function Home() {
               <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "rgba(0, 242, 254, 0.15)", border: "1px solid rgba(0, 242, 254, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
                 <Shield size={24} style={{ color: "#00f2fe" }} />
               </div>
-              <h4 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>60s Timelock Vault</h4>
+              <h4 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>Timelock Vault</h4>
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
-                Lock funds into Rust smart contracts. Funds can only be withdrawn during a 20-second unlock window.
+                Lock funds into Rust smart contracts. Funds can only be withdrawn during a the unlock window.
               </p>
             </div>
 
@@ -719,7 +719,7 @@ export default function Home() {
               </div>
               <h4 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>Play & Earn XP</h4>
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
-                Play arcade mini-games like Stroop Catcher & Vault Code Breaker to earn bonus XP every 5 minutes.
+                Play arcade mini-games like Stroop Catcher & Vault Code Breaker to earn bonus XP.
               </p>
             </div>
 
@@ -727,7 +727,7 @@ export default function Home() {
               <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
                 <Trophy size={24} style={{ color: "#10b981" }} />
               </div>
-              <h4 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>5 Level Tiers & Badges</h4>
+              <h4 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>Level Tiers & Badges</h4>
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
                 Rank up from Piggy Novice to Stellar Whale and unlock milestone badges as your savings grow.
               </p>
