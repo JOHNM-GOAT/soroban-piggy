@@ -228,7 +228,7 @@ export async function withdrawXlm(
     const contract = new Contract(contractId);
     const accountObj = await server.getAccount(callerAddress);
 
-    const op = contract.call("withdraw");
+    const op = contract.call("withdraw", Address.fromString(callerAddress).toScVal());
 
     let tx = new TransactionBuilder(accountObj, {
       fee: "100",
